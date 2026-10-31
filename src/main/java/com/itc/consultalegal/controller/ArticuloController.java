@@ -46,7 +46,16 @@ public class ArticuloController {
 
     @GetMapping("/buscar")
     public String buscarArticulos(@RequestParam(value = "q", required = false) String query, Model model) {
+
+        if (query != null && query.length() > 15) {
+            model.addAttribute("error", "La búsqueda no puede superar los 15 caracteres.");
+            model.addAttribute("query", query);
+            model.addAttribute("articulos", List.of());
+            return "lista-articulos";
+        }
+
         List<Articulo> articulos;
+
         if (query != null && !query.trim().isEmpty()) {
             articulos = articuloService.search(query);
             model.addAttribute("titulo", "Resultados de búsqueda: " + query);
@@ -55,6 +64,7 @@ public class ArticuloController {
             articulos = articuloService.findAll();
             model.addAttribute("titulo", "Todos los Artículos sobre Ciberdelitos");
         }
+
         model.addAttribute("articulos", articulos);
         return "lista-articulos";
     }
