@@ -5,7 +5,8 @@ import com.itc.consultalegal.service.ArticuloService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.dao.DataAccessException;
+import org.springframework.transaction.CannotCreateTransactionException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,9 +22,17 @@ public class ArticuloController {
 
     @GetMapping
     public String listarArticulos(Model model) {
-        List<Articulo> articulos = articuloService.findAll();
-        model.addAttribute("articulos", articulos);
-        model.addAttribute("titulo", "Todos los Artículos sobre Ciberdelitos");
+        try {
+            List<Articulo> articulos = articuloService.findAll();
+            model.addAttribute("articulos", articulos);
+            model.addAttribute("titulo", "Todos los Artículos sobre Ciberdelitos");
+
+        } catch (CannotCreateTransactionException | DataAccessException e) {
+            model.addAttribute("articulos", List.of());
+            model.addAttribute("titulo", "Todos los Artículos sobre Ciberdelitos");
+            model.addAttribute("error", "No fue posible consultar los artículos. Inténtelo más tarde.");
+        }
+
         return "lista-articulos";
     }
 
