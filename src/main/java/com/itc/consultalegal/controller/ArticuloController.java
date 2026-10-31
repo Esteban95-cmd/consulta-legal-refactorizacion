@@ -2,7 +2,6 @@ package com.itc.consultalegal.controller;
 
 import com.itc.consultalegal.entity.Articulo;
 import com.itc.consultalegal.service.ArticuloService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +13,11 @@ import java.util.Optional;
 @RequestMapping("/articulos")
 public class ArticuloController {
 
-    @Autowired
-    private ArticuloService articuloService;
+    private final ArticuloService articuloService;
+
+    public ArticuloController(ArticuloService articuloService) {
+        this.articuloService = articuloService;
+    }
 
     @GetMapping
     public String listarArticulos(Model model) {
@@ -27,13 +29,19 @@ public class ArticuloController {
 
     @GetMapping("/{id}")
     public String verDetalleArticulo(@PathVariable Long id, Model model) {
-        Optional<Articulo> articuloOpt = articuloService.findById(id);
-        if (articuloOpt.isPresent()) {
-            model.addAttribute("articulo", articuloOpt.get());
-            return "detalle-articulo";
-        } else {
-            return "redirect:/articulos";
-        }
+        return articuloService.findById(id)
+                .map(articulo -> {
+                    model.addAttribute("articulo", articulo);
+                    return "detalle-articulo";
+                })
+                .orElse("redirect:/articulos");
+    }
+
+    @GetMapping("/ver/{numero}")
+    public String verPorNumero(@PathVariable String numero, Model model) {
+        return articuloService.findByNumeroExacto(numero)
+                .map(articulo -> "redirect:/articulos/" + articulo.getId())
+                .orElse("redirect:/articulos");
     }
 
     @GetMapping("/buscar")
@@ -63,13 +71,4 @@ public class ArticuloController {
         return "lista-articulos";
     }
 
-    @GetMapping("/ver/{numero}")
-    public String verPorNumero(@PathVariable String numero, Model model) {
-        Optional<Articulo> articuloOpt = articuloService.findByNumeroExacto(numero);
-        if (articuloOpt.isPresent()) {
-            return "redirect:/articulos/" + articuloOpt.get().getId();
-        } else {
-            return "redirect:/articulos";
-        }
-    }
 }
