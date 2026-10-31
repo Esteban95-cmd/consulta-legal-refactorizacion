@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo}">Artículos sobre Ciberdelitos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a3c6e;
+            --secondary-color: #2c5aa0;
+            --accent-color: #d4af37;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+            color: var(--accent-color);
+        }
+        
+        .btn-outline-light {
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            color: white;
+            transition: var(--transition);
+        }
+        
+        .btn-outline-light:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: white;
+        }
+        
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(rgba(26, 60, 110, 0.05), rgba(26, 60, 110, 0.1));
+            padding: 2rem 0;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+        }
+        
+        .page-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .page-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+        
+        /* Search Form */
+        .search-form {
+            max-width: 100%;
+        }
+        
+        .search-form .input-group {
+            box-shadow: var(--box-shadow);
+            border-radius: var(--border-radius);
+        }
+        
+        .search-form .form-control {
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+        }
+        
+        .search-form .btn {
+            background-color: var(--accent-color);
+            border: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 0 1.5rem;
+            transition: var(--transition);
+        }
+        
+        .search-form .btn:hover {
+            background-color: #c19b2a;
+        }
+        
+        /* Table */
+        .table-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+        
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table thead {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+        
+        .table thead th {
+            border: none;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+        }
+        
+        .table tbody tr {
+            transition: var(--transition);
+        }
+        
+        .table tbody tr:hover {
+            background-color: rgba(26, 60, 110, 0.05);
+        }
+        
+        .table tbody td {
+            padding: 1rem 1.5rem;
+            border-color: #eaeaea;
+            vertical-align: middle;
+        }
+        
+        /* Buttons */
+        .btn-primary-custom {
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: var(--transition);
+        }
+        
+        .btn-primary-custom:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .btn-secondary-custom {
+            background-color: #6c757d;
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .btn-secondary-custom:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: var(--box-shadow);
+        }
+        
+        /* Alert */
+        .alert-info-custom {
+            background-color: rgba(26, 60, 110, 0.1);
+            border: 1px solid rgba(26, 60, 110, 0.2);
+            color: var(--primary-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+        }
+        
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 2.5rem 0 1.5rem;
+            margin-top: 4rem;
+        }
+        
+        footer p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 1rem;
+        }
+        
+        .footer-links a {
+            color: white;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .table-responsive {
+                border-radius: var(--border-radius);
+            }
+            
+            .page-title {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">
+                <i class="fas fa-balance-scale"></i>
+                Consulta Legal Ciberdelitos
+            </a>
+            <a class="btn btn-outline-light" th:href="@{/}">
+                <i class="fas fa-home me-2"></i>Inicio
+            </a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row fade-in">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h1 th:text="${titulo}" class="page-title">Artículos sobre Ciberdelitos</h1>
+                </div>
+                
+                <form th:action="@{/articulos/buscar}" method="get" class="search-form mb-4">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" 
+                               th:value="${query}" 
+                               placeholder="Buscar artículos...">
+                        <button class="btn" type="submit">
+                            <i class="fas fa-search me-2"></i>Buscar
+                        </button>
+                    </div>
+                </form>
+
+                <div th:if="${articulos.empty}" class="alert alert-info-custom text-center">
+                    <i class="fas fa-info-circle me-2"></i>
+                    No se encontraron artículos que coincidan con la búsqueda.
+                </div>
+
+                <div th:unless="${articulos.empty}" class="table-container">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Número</th>
+                                    <th>Título</th>
+                                    <th>Ley Relacionada</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="articulo : ${articulos}">
+                                    <td th:text="${articulo.numeroArticulo}" class="fw-bold">269A</td>
+                                    <td th:text="${articulo.titulo}">Título del artículo</td>
+                                    <td th:text="${articulo.leyRelacionada}">Ley 1273 de 2009</td>
+                                    <td>
+                                        <!-- ESTE ES EL ENLACE IMPORTANTE -->
+                                        <a th:href="@{/articulos/{id}(id=${articulo.id})}" 
+                                           class="btn btn-primary-custom">
+                                           <i class="fas fa-eye me-1"></i>Ver Detalle
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <a th:href="@{/}" class="btn btn-secondary-custom">
+                        <i class="fas fa-arrow-left me-2"></i>Volver al Inicio
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container text-center">
+            <p>&copy; 2025 Escuela Tecnológica Instituto Técnico Central - Tecnología en Desarrollo de Software</p>
+            <p class="mb-0">Fuente: Código Penal Colombiano - Ley 1273 de 2009</p>
+            <div class="footer-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
